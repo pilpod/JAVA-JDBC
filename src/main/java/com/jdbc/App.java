@@ -3,6 +3,7 @@ package com.jdbc;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
@@ -27,8 +28,15 @@ public final class App {
 
             Statement mysql = connection.createStatement();
 
+            // Deleting data in database
+            deleteDog(mysql);
+
+            // Adding data in database
             System.out.println("Adding a Dog");
-            mysql.executeUpdate("INSERT INTO dogs (name,breed) VALUES ('Max','Pastor Aleman')");
+            addDog(mysql);
+
+            // Update data in database
+            updateDog(mysql);
             
             // Retrieve all dogs
             ResultSet data = mysql.executeQuery("SELECT * FROM dogs");
@@ -37,10 +45,23 @@ public final class App {
                 System.out.println(data.getString("name"));
             }
 
+            connection.close();
             
         } catch (Exception e) {
             System.out.println("Connection Error: " + e.getMessage());
         }
 
+    }
+
+    public static void addDog(Statement mysql) throws SQLException {
+        mysql.executeUpdate("INSERT INTO dogs (name,breed) VALUES ('Bilbo','Pastor Aleman')");
+    }
+
+    public static void updateDog(Statement mysql) throws SQLException {
+        mysql.executeUpdate("UPDATE dogs SET name = 'SuperDog' WHERE name = 'Bilbo'");
+    }
+
+    public static void deleteDog(Statement mysql) throws SQLException {
+        mysql.executeUpdate("DELETE FROM dogs WHERE name = 'SuperDog'");
     }
 }
